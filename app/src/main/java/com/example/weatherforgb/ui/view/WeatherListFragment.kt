@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.weatherforgb.R
@@ -32,26 +33,27 @@ class WeatherListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         viewModel =ViewModelProvider(this).get(WeatherListViewModel::class.java)
         viewModel.getLiveData().observe(viewLifecycleOwner, object : Observer<AppState>{
-            override fun onChanged(t: AppState?) {
+            override fun onChanged(t: AppState) {
                 renderData(t)
             }
         })
         viewModel.sentRequest()
     }
 
-    private fun renderData(appState: AppState?) {
-//        when (appState) {
-//            is AppState.Error -> {/*TODO*/
-//            }
-//            AppState.Loading -> {/*TODO*/
-//            }
-//            is AppState.Success -> {
-//                val result = appState.weatherData
-//                binding.cityName.text = result.city.name
-//                binding.temperatureValue.text = result.temperature.toString()
-//                binding.feelsLikeValue.text = result.feelsLike.toString()
-//                binding.cityCoordinates.text = "${result.city.lat}/${result.city.lon}"
-//            }
-//        }
+    private fun renderData(appState: AppState) {
+        when (appState) {
+            is AppState.Error -> {Toast.makeText(requireContext(), appState.error.toString(), Toast.LENGTH_LONG).show()
+                binding.loadingLayout.visibility = View.GONE
+            }
+            AppState.Loading -> {binding.loadingLayout.visibility = View.VISIBLE
+            }
+            is AppState.Success -> {
+                val result = appState.weatherData
+                binding.cityName.text = result.city.name
+                binding.temperatureValue.text = result.temperature.toString()
+                binding.feelsLikeValue.text = result.feelsLike.toString()
+                binding.cityCoordinates.text = "${result.city.lat}/${result.city.lon}"
+            }
+        }
     }
 }
