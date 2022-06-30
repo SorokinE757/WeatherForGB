@@ -2,16 +2,20 @@ package com.example.weatherforgb
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.weatherforgb.ui.main.MainFragment
+import com.example.weatherforgb.databinding.ActivityMainBinding
+import com.example.weatherforgb.ui.view.WeatherListFragment
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding =ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MainFragment.newInstance())
+                .replace(R.id.container, WeatherListFragment.newInstance())
                 .commitNow()
         }
     }
