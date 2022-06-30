@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.weatherforgb.R
+import com.example.weatherforgb.databinding.FragmentWeatherListBinding
 
 class WeatherListFragment : Fragment() {
 
@@ -13,13 +14,15 @@ class WeatherListFragment : Fragment() {
         fun newInstance() = WeatherListFragment()
     }
 
+    lateinit var binding: FragmentWeatherListBinding
     private lateinit var viewModel: WeatherListViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        return inflater.inflate(R.layout.fragment_weather_list, container, false)
+        binding =FragmentWeatherListBinding.inflate(inflater)
+        return binding.root
     }
 
 
