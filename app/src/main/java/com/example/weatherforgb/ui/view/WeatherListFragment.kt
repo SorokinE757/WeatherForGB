@@ -8,9 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import com.example.weatherforgb.R
 import com.example.weatherforgb.databinding.FragmentWeatherListBinding
 import com.example.weatherforgb.viewmodel.AppState
+import com.example.weatherforgb.viewmodel.WeatherListViewModel
 
 class WeatherListFragment : Fragment() {
 
