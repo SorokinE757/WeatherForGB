@@ -20,10 +20,11 @@ class WeatherListViewModel(private val liveData: MutableLiveData<AppState> = Mut
 
     private fun chooseRepository() {
         repoSingleWeather = if (isConnection()) {
-            RepoLocalImp()
+           RepoRemoteImp()
         } else {
-            RepoRemoteImp()
+            RepoLocalImp()
         }
+        repoWeatherList = RepoLocalImp()
     }
 
     private fun isConnection(): Boolean {
