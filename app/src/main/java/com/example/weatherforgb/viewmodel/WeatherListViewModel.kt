@@ -2,43 +2,49 @@ package com.example.weatherforgb.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.weatherforgb.model.RepoLocalImp
-import com.example.weatherforgb.model.RepoRemoteImp
-import com.example.weatherforgb.model.RepoSingleWeather
-import com.example.weatherforgb.model.RepoWeatherList
+import com.example.weatherforgb.model.*
 
-class WeatherListViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData()) :
+class WeatherListViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData<AppState>()) :
     ViewModel() {
 
-    lateinit var repoWeatherList: RepoWeatherList
-    lateinit var repoSingleWeather: RepoSingleWeather
+    lateinit var repositoryMulti: RepoWeatherList
+    lateinit var repositoryOne: RepoSingleWeather
 
     fun getLiveData(): MutableLiveData<AppState> {
-        chooseRepository()
+        choiceRepository()
         return liveData
     }
 
-    private fun chooseRepository() {
-        repoSingleWeather = if (isConnection()) {
-           RepoRemoteImp()
+    private fun choiceRepository() {
+        repositoryOne = if (isConnection()) {
+            RepoRemoteImp()
         } else {
             RepoLocalImp()
         }
-        repoWeatherList = RepoLocalImp()
+        repositoryMulti = RepoLocalImp()
+    }
+
+    fun getWeatherListForRussia() {
+        sentRequest(Location.Russia)
+    }
+
+    fun getWeatherListForWorld() {
+        sentRequest(Location.World)
+    }
+
+    private fun sentRequest(location: Location) {
+        liveData.value = AppState.Loading
+        if ((1..3).random() != 1) {
+            liveData.postValue(AppState.SuccessMulti(repositoryMulti.getWeatherList(location)))
+        }else{
+            liveData.setValue(AppState.Error(error =  IllegalStateException("ошибочка вышла")))
+
+        }
+
     }
 
     private fun isConnection(): Boolean {
         return false
     }
 
-    fun sentRequest() {
-        liveData.value = AppState.Loading
-        if ((1..3).random() != 1) {
-            liveData.setValue(AppState.Success(repoSingleWeather.getWeather(55.755826, 37.617299900000035)))
-
-        } else {
-            liveData.setValue(AppState.Error(error =  IllegalStateException("ошибочка вышла")))
-
-        }
-    }
 }

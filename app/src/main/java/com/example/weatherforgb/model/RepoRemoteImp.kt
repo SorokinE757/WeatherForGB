@@ -1,8 +1,6 @@
 package com.example.weatherforgb.model
 
 import com.example.weatherforgb.domain.Weather
-import com.example.weatherforgb.domain.getRussianCities
-import com.example.weatherforgb.domain.getWorldCities
 
 class RepoRemoteImp : RepoSingleWeather {
 
