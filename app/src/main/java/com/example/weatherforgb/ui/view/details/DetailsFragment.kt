@@ -1,4 +1,3 @@
-
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -35,25 +34,27 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //val weather=  arguments?.get(BUNDLE_WEATHER_EXTRA)
-        val weather = (arguments?.getParcelable<Weather>(BUNDLE_WEATHER_EXTRA))
-        if (weather != null)
-            renderData(weather)
+        arguments?.let { args-> args.getParcelable<Weather>(BUNDLE_WEATHER_EXTRA)?.let{ weather ->
+            renderData(weather) } }
+
     }
 
     private fun renderData(weather: Weather) {
-        binding.cityName.text = weather.city.name
-        binding.temperatureValue.text = weather.temperature.toString()
-        binding.feelsLikeValue.text = weather.feelsLike.toString()
-        binding.cityCoordinates.text = "${weather.city.lat}/${weather.city.lon}"
+        with(binding) {
+            cityName.text = weather.city.name
+            temperatureValue.text = weather.temperature.toString()
+            feelsLikeValue.text = weather.feelsLike.toString()
+            cityCoordinates.text = "${weather.city.lat}/${weather.city.lon}"
+        }
     }
 
     companion object {
         const val BUNDLE_WEATHER_EXTRA = "sgrrdfge"
         fun newInstance(weather: Weather): DetailsFragment {
-            val bundle = Bundle()
-            bundle.putParcelable(BUNDLE_WEATHER_EXTRA, weather)
+//            val bundle = Bundle()
+//            bundle.putParcelable(BUNDLE_WEATHER_EXTRA, weather)
             val fr = DetailsFragment()
-            fr.arguments = bundle
+            fr.arguments = Bundle().apply { putParcelable(BUNDLE_WEATHER_EXTRA, weather) }
             return fr
         }
     }

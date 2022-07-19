@@ -3,6 +3,7 @@ package com.example.weatherforgb.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.weatherforgb.model.*
+import kotlin.random.Random
 
 class WeatherListViewModel(private val liveData: MutableLiveData<AppState> = MutableLiveData<AppState>()) :
     ViewModel() {
@@ -34,10 +35,10 @@ class WeatherListViewModel(private val liveData: MutableLiveData<AppState> = Mut
 
     private fun sentRequest(location: Location) {
         liveData.value = AppState.Loading
-        if ((1..3).random() != 1) {
-            liveData.postValue(AppState.SuccessMulti(repositoryMulti.getWeatherList(location)))
-        }else{
+        if ((0..3).random(Random(System.currentTimeMillis())) == 1) {
             liveData.setValue(AppState.Error(error =  IllegalStateException("ошибочка вышла")))
+        }else{
+           liveData.postValue(AppState.SuccessMulti(repositoryMulti.getWeatherList(location)))
 
         }
 

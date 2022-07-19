@@ -15,6 +15,7 @@ import com.example.weatherforgb.databinding.FragmentWeatherListBinding
 import com.example.weatherforgb.domain.Weather
 import com.example.weatherforgb.viewmodel.AppState
 import com.example.weatherforgb.viewmodel.WeatherListViewModel
+import com.google.android.material.snackbar.Snackbar
 
 class WeatherListFragment : Fragment(), OnItemClick {
 
@@ -70,24 +71,44 @@ class WeatherListFragment : Fragment(), OnItemClick {
     private fun renderData(appState: AppState) {
         when (appState) {
             is AppState.Error -> {
-                Toast.makeText(requireContext(), appState.error.toString(), Toast.LENGTH_LONG)
-                    .show()
-                binding.mainFragmentLoadingLayout.visibility = View.GONE
+                binding.showResult()
+                binding.root.homeWork("Error", Snackbar.LENGTH_LONG, "Try again") { _ ->
+                    if (isRussian) {
+                        viewModel.getWeatherListForRussia()
+                    } else {
+                        viewModel.getWeatherListForWorld()
+                    }
+                }
             }
             AppState.Loading -> {
-                binding.mainFragmentLoadingLayout.visibility = View.VISIBLE
+                binding.loading()
             }
             is AppState.SuccessSingle -> {
-                binding.mainFragmentLoadingLayout.visibility = View.GONE
+                binding.showResult()
                 val result = appState.weatherData
             }
             is AppState.SuccessMulti -> {
-                binding.mainFragmentLoadingLayout.visibility = View.GONE
+                binding.showResult()
                 binding.mainFragmentRecyclerView.adapter =
                     WeatherListAdapter(appState.weatherList, this)
             }
         }
     }
+
+    fun View.homeWork(str: String, duration: Int, actionStr: String, block: (v:View) -> Unit){
+        Snackbar.make(this,str, duration).setAction(actionStr, block).show()
+    }
+
+    fun FragmentWeatherListBinding.loading() {
+        this.mainFragmentLoadingLayout.visibility = View.VISIBLE
+        this.weatherListFragmentFAB.visibility = View.GONE
+    }
+
+    fun FragmentWeatherListBinding.showResult() {
+        this.mainFragmentLoadingLayout.visibility = View.GONE
+        this.weatherListFragmentFAB.visibility = View.VISIBLE
+    }
+
 
     override fun onItemClick(weather: Weather) {
         requireActivity().supportFragmentManager.beginTransaction().hide(this).add(
